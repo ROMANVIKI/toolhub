@@ -105,3 +105,4 @@ For SQLite, add `tauri-plugin-sql` to Cargo.toml — no separate server needed.
 RFID scan (simulated) logs in as **tech01** after 1.8s.
 # toolhub
 # toolhub
+# toolhub
