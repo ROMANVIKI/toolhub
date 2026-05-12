@@ -12,18 +12,19 @@ jobs:
     permissions:
       contents: write
     outputs:
-      release_id: ${{ steps.create-release.outputs.releaseId }}
+      release_id: ${{ steps.create-release.outputs.id }}
     steps:
       - uses: actions/checkout@v4
-      - uses: tauri-apps/tauri-action@v0
+      - name: Create GitHub Release
         id: create-release
+        uses: actions/create-release@v1        # ✅ Just creates the release, no build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.ref_name }}
-          releaseName: ToolHub ${{ github.ref_name }}
-          releaseDraft: false
-          releasePrerelease: false
+          tag_name: ${{ github.ref_name }}
+          release_name: ToolHub ${{ github.ref_name }}
+          draft: false
+          prerelease: false
 
   build:
     needs: create-release
@@ -43,28 +44,40 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+
       - run: npm install
+
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
+
       - uses: swatinem/rust-cache@v2
         with:
           workspaces: src-tauri
+
       - name: Install Linux deps
         if: matrix.os == 'ubuntu-22.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf
-      - uses: tauri-apps/tauri-action@v0
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            patchelf
+
+      - name: Build & upload to release
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           releaseId: ${{ needs.create-release.outputs.release_id }}
           args: --target ${{ matrix.target }} --bundles ${{ matrix.bundles }}
+
       - name: Upload Linux artifacts
         if: matrix.os == 'ubuntu-22.04'
         uses: actions/upload-artifact@v4
@@ -73,6 +86,7 @@ jobs:
           path: |
             src-tauri/target/${{ matrix.target }}/release/bundle/deb/*.deb
             src-tauri/target/${{ matrix.target }}/release/bundle/appimage/*.AppImage
+
       - name: Upload Windows artifacts
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v4
