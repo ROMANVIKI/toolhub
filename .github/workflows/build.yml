@@ -4,10 +4,32 @@ on:
     tags:
       - 'v*'
     branches: [main]
+
 jobs:
-  build:
+  create-release:
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
     permissions:
-      contents: write   # <-- this is what was missing
+      contents: write
+    outputs:
+      release_id: ${{ steps.create-release.outputs.releaseId }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: tauri-apps/tauri-action@v0
+        id: create-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: ToolHub ${{ github.ref_name }}
+          releaseDraft: false
+          releasePrerelease: false
+
+  build:
+    needs: create-release
+    if: always() && (needs.create-release.result == 'success' || github.ref_type != 'tag')
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -41,9 +63,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
-          releaseName: ${{ github.ref_type == 'tag' && format('ToolHub {0}', github.ref_name) || '' }}
-          releaseDraft: false
+          releaseId: ${{ needs.create-release.outputs.release_id }}
           args: --target ${{ matrix.target }} --bundles ${{ matrix.bundles }}
       - name: Upload Linux artifacts
         if: matrix.os == 'ubuntu-22.04'
