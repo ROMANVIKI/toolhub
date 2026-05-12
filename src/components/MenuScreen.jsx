@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { resolveResource } from "@tauri-apps/plugin-path";
+import { resolveResource } from "@tauri-apps/api/path";
 import { convertFileSrc } from "@tauri-apps/api/core";
 
 // ── Position offsets from center (px) ───────────────────────────────────────

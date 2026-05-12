@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { resolveResource } from "@tauri-apps/plugin-path";
-import { convertFileSrc } from "@tauri-apps/api/core";
 import { USERS } from "../data";
+// ✅ Replace with this
+import { resolveResource } from "@tauri-apps/api/path";
+import { convertFileSrc } from "@tauri-apps/api/core";
 
 export default function LoginScreen({ onLogin, config }) {
   const [username, setUsername] = useState("");

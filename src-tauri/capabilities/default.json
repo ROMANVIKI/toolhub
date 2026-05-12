@@ -8,9 +8,30 @@
   "permissions": [
     "core:default",
     "opener:default",
-    "path:default",
-    "fs:allow-read-text-file",
-    "fs:allow-exists",
-    "fs:scope-app-local-data-read-recursive"
+    "fs:default",
+    {
+      "identifier": "fs:allow-read-text-file",
+      "allow": [
+        {
+          "path": "$APPDATA/**"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:allow-write-text-file",
+      "allow": [
+        {
+          "path": "$APPDATA/**"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:allow-exists",
+      "allow": [
+        {
+          "path": "$APPDATA/**"
+        }
+      ]
+    }
   ]
 }

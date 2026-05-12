@@ -1,4 +1,5 @@
-import { resolveResource } from "@tauri-apps/plugin-path";
+import { useState, useEffect } from "react";
+import { resolveResource } from "@tauri-apps/api/path";
 import { readTextFile, exists } from "@tauri-apps/plugin-fs";
 
 const DEFAULT_CONFIG = {
@@ -36,25 +37,33 @@ let _cached = null;
 
 export async function loadConfig() {
   if (_cached) return _cached;
-
   try {
-    // resolveResource looks next to the .exe at runtime
     const configPath = await resolveResource("app.config.json");
     const fileExists = await exists(configPath);
-
     if (!fileExists) {
-      console.warn("app.config.json not found beside .exe, using defaults");
+      console.warn("app.config.json not found, using defaults");
       _cached = DEFAULT_CONFIG;
       return _cached;
     }
-
     const raw = await readTextFile(configPath);
     _cached = { ...DEFAULT_CONFIG, ...JSON.parse(raw) };
     return _cached;
-
   } catch (e) {
     console.error("Failed to load config:", e);
     _cached = DEFAULT_CONFIG;
     return _cached;
   }
+}
+
+export function useConfig() {
+  const [config, setConfig] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadConfig()
+      .then((cfg) => setConfig(cfg))
+      .finally(() => setLoading(false));
+  }, []);
+
+  return { config, loading };
 }

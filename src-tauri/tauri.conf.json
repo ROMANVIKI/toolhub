@@ -25,6 +25,19 @@
       "csp": null
     }
   },
+  "plugins": {
+    "fs": {
+      "allow": [
+        "read",
+        "write",
+        "exists"
+      ],
+      "scope": [
+        "$APPDATA",
+        "$APPDATA/*"
+      ]
+    }
+  },
   "bundle": {
     "active": true,
     "targets": [

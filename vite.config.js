@@ -12,4 +12,13 @@ export default defineConfig(async () => ({
       ignored: ["**/src-tauri/**"],
     },
   },
+  build: {
+    target: ["es2021", "chrome105", "safari13"],
+    minify: "esbuild",
+    sourcemap: false,
+    rollupOptions: {
+      external: [],
+    },
+  },
 }));
+
