@@ -1,6 +1,8 @@
 name: Build Tauri App
 on:
   push:
+    tags:
+      - 'v*'
     branches: [main]
 jobs:
   build:
@@ -37,6 +39,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          tagName: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
+          releaseName: ${{ github.ref_type == 'tag' && format('ToolHub {0}', github.ref_name) || '' }}
+          releaseDraft: false
           args: --target ${{ matrix.target }} --bundles ${{ matrix.bundles }}
       - name: Upload Linux artifacts
         if: matrix.os == 'ubuntu-22.04'
