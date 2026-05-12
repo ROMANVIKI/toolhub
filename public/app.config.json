@@ -1,0 +1,54 @@
+{
+  "app": {
+    "name": "TOOLHUB",
+    "tagline": "Hardware Inventory Management",
+    "version": "1.0.0",
+    "company": "Your Company"
+  },
+  "auth": {
+    "loginButtonLabel": "Sign In",
+    "logoutButtonLabel": "Log Out",
+    "rfidLabel": "RFID Authentication",
+    "rfidScanLabel": "Scan RFID Card",
+    "credentialsLabel": "OR CREDENTIALS"
+  },
+  "menu": {
+    "centerLabel": "CORE",
+    "items": [
+      {
+        "id": "tools",
+        "label": "TOOLS",
+        "icon": "⬡",
+        "position": "top"
+      },
+      {
+        "id": "service",
+        "label": "SERVICE",
+        "icon": "⚙",
+        "position": "right"
+      },
+      {
+        "id": "reports",
+        "label": "REPORTS",
+        "icon": "▤",
+        "position": "bottom-right"
+      },
+      {
+        "id": "settings",
+        "label": "SETTINGS",
+        "icon": "◈",
+        "position": "bottom-left"
+      },
+      {
+        "id": "users",
+        "label": "USERS",
+        "icon": "◎",
+        "position": "left"
+      }
+    ]
+  },
+  "theme": {
+    "accentColor": "#3b82f6",
+    "fontFamily": "JetBrains Mono, Fira Code, Cascadia Code, Consolas, ui-monospace, monospace"
+  }
+}

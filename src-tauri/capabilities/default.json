@@ -1,0 +1,16 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "core:default",
+    "opener:default",
+    "path:default",
+    "fs:allow-read-text-file",
+    "fs:allow-exists",
+    "fs:scope-app-local-data-read-recursive"
+  ]
+}
