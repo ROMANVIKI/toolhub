@@ -13,17 +13,17 @@
     "windows": [
       {
         "title": "ToolHub",
-        "width": 1340,
-        "height": 840,
+        "width": 960,
+        "height": 600,
         "minWidth": 960,
-        "minHeight": 640,
+        "minHeight": 600,
+        "maximized": true,
         "resizable": true,
         "fullscreen": false,
-        "maximized": false,
         "center": true,
         "decorations": true
       }
-    ],
+    ]
     "security": {
       "csp": null
     }
