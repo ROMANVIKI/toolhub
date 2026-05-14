@@ -23,7 +23,7 @@
         "center": true,
         "decorations": true
       }
-    ]
+    ],
     "security": {
       "csp": null
     }
