@@ -103,6 +103,166 @@ For SQLite, add `tauri-plugin-sql` to Cargo.toml — no separate server needed.
 | engineer | eng@hub |
 
 RFID scan (simulated) logs in as **tech01** after 1.8s.
-# toolhub
-# toolhub
-# toolhub
+
+
+
+# TOOLHUB — Configuration Guide
+
+## Overview
+
+TOOLHUB stores its configuration as a plain JSON file on disk. You can edit it either through the **Settings screen** inside the app, or manually using any text editor. Changes take effect on the next app reload.
+
+---
+
+## Config File Location
+
+The config file is stored in your operating system's **app data directory**, under a folder named `toolhub`.
+
+| OS | Path |
+|----|------|
+| **Windows** | `C:\Users\<YourName>\AppData\Roaming\toolhub\config.json` |
+| **macOS** | `/Users/<YourName>/Library/Application Support/toolhub/config.json` |
+| **Linux** | `/home/<YourName>/.config/toolhub/config.json` |
+
+> **Tip — Windows shortcut:** Press `Win + R`, type `%APPDATA%\toolhub` and hit Enter to jump straight to the folder.
+
+> **Tip — macOS shortcut:** In Finder, press `Cmd + Shift + G` and paste `~/Library/Application Support/toolhub`.
+
+---
+
+## Config File Structure
+
+```json
+{
+  "app": {
+    "name": "TOOLHUB",
+    "tagline": "Hardware Inventory Management",
+    "company": "Your Company",
+    "version": "1.0.0",
+    "logoPath": ""
+  },
+  "auth": {
+    "loginButtonLabel": "",
+    "logoutButtonLabel": "",
+    "rfidLabel": "",
+    "rfidScanLabel": "",
+    "credentialsLabel": ""
+  },
+  "theme": {
+    "accentColor": "#3b82f6",
+    "fontFamily": "JetBrains Mono, Fira Code, Consolas, monospace"
+  }
+}
+```
+
+---
+
+## Section Reference
+
+### `app` — Application Identity
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `name` | string | App title shown in the top bar and login screen |
+| `tagline` | string | Subtitle shown on the login screen |
+| `company` | string | Company name displayed in the UI |
+| `version` | string | Version string (display only, does not affect updates) |
+| `logoPath` | string | Absolute path to a logo image (`png`, `jpg`, `svg`, `ico`, `webp`). Leave empty to use the default. |
+
+### `auth` — Authentication Labels
+
+These override the default text shown on the login screen. Leave any field empty to use the built-in default label.
+
+| Key | Description |
+|-----|-------------|
+| `loginButtonLabel` | Text on the login/submit button |
+| `logoutButtonLabel` | Text on the logout button |
+| `rfidLabel` | Heading for the RFID scan section |
+| `rfidScanLabel` | Text on the RFID scan button |
+| `credentialsLabel` | Text on the divider between RFID and manual login |
+
+### `theme` — Visual Appearance
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `accentColor` | hex string | Primary accent color used for borders, highlights, and buttons (e.g. `#3b82f6`) |
+| `fontFamily` | string | CSS font-family string applied app-wide |
+
+---
+
+## Editing the Config
+
+### Option 1 — Settings Screen (Recommended)
+
+1. Launch TOOLHUB
+2. From the main menu, click **Settings**
+3. Edit any field and click **SAVE SETTINGS**
+4. Reload the app for changes to take effect
+
+### Option 2 — Manual JSON Edit
+
+1. Close the app
+2. Navigate to the config path for your OS (see table above)
+3. Open `config.json` in any text editor (Notepad, VS Code, nano, etc.)
+4. Edit the values, save the file
+5. Relaunch the app
+
+> **Warning:** If the JSON is malformed (missing comma, unclosed bracket, etc.), the app will fall back to defaults on next launch. Use a JSON validator like [jsonlint.com](https://jsonlint.com) if unsure.
+
+---
+
+## Logo Setup
+
+The `logoPath` must be an **absolute path** to an image file on the local machine.
+
+**Examples:**
+
+```
+# Windows
+C:\Users\John\Pictures\company-logo.png
+
+# macOS / Linux
+/home/john/pictures/company-logo.png
+```
+
+Supported formats: `png`, `jpg`, `jpeg`, `svg`, `ico`, `webp`
+
+You can also use the **BROWSE** button in the Settings screen to pick a file using the system file picker — this fills in the path automatically.
+
+---
+
+## Resetting to Defaults
+
+To reset all settings to their defaults, either:
+
+- **Delete** `config.json` — the app will regenerate it with defaults on next launch, **or**
+- **Clear** all fields in the Settings screen and save
+
+---
+
+## Permissions
+
+The app only reads and writes files inside `$APPDATA/toolhub/`. It does not access any other directory on your system except when you explicitly pick a logo file via the file browser.
+
+---
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| Settings not saving | Check that `$APPDATA/toolhub/` exists and is not read-only |
+| Logo not showing | Ensure the path is absolute and the file still exists at that location |
+| App shows defaults after edit | Validate your JSON — a syntax error causes the file to be ignored |
+| Config folder missing | Launch the app at least once — it creates the folder on first run |
+
+---
+
+## File Permissions (Tauri Scope)
+
+The app is granted read/write access only to:
+
+```
+$APPDATA/**
+```
+
+This is enforced by Tauri's capability system (`capabilities/default.json`) and cannot be overridden at runtime.

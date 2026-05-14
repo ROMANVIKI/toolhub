@@ -1,4 +1,5 @@
 name: Build Tauri App
+
 on:
   push:
     tags:
@@ -15,16 +16,17 @@ jobs:
       release_id: ${{ steps.create-release.outputs.id }}
     steps:
       - uses: actions/checkout@v4
+
       - name: Create GitHub Release
         id: create-release
-        uses: actions/create-release@v1        # ✅ Just creates the release, no build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          release_name: ToolHub ${{ github.ref_name }}
+          name: ToolHub ${{ github.ref_name }}
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build:
     needs: create-release
@@ -42,6 +44,7 @@ jobs:
             target: x86_64-pc-windows-msvc
             bundles: msi,nsis
     runs-on: ${{ matrix.os }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -50,7 +53,7 @@ jobs:
           node-version: 20
           cache: npm
 
-      - run: npm install
+      - run: npm ci
 
       - uses: dtolnay/rust-toolchain@stable
         with:
