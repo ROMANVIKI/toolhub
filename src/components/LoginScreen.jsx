@@ -4,6 +4,7 @@ import { USERS } from "../data";
 import { resolveResource } from "@tauri-apps/api/path";
 import { convertFileSrc } from "@tauri-apps/api/core";
 
+
 export default function LoginScreen({ onLogin, config }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
