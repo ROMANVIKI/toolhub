@@ -1,6 +1,6 @@
 
 
-use tauri::Manager;
+// use tauri::Manager;
 
 // ── Tauri commands (add your backend logic here later) ─────────────────────
 //
@@ -12,20 +12,39 @@ use tauri::Manager;
 //     Ok(())
 // }
 
+// #[cfg_attr(mobile, tauri::mobile_entry_point)]
+// pub fn run() {
+//     tauri::Builder::default()
+//         .plugin(tauri_plugin_opener::init())
+//         .setup(|app| {
+//             // Centre the main window on startup
+//             if let Some(window) = app.get_webview_window("main") {
+//                 let _ = window.center();
+//             }
+//             Ok(())
+//         })
+//         // Register commands:  .invoke_handler(tauri::generate_handler![save_tool])
+//         .invoke_handler(tauri::generate_handler![])
+//         .run(tauri::generate_context!())
+//         .expect("error while running tauri application");
+// }
+
+
+use tauri::Manager;
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .setup(|app| {
-            // Centre the main window on startup
             if let Some(window) = app.get_webview_window("main") {
                 let _ = window.center();
             }
             Ok(())
         })
-        // Register commands:  .invoke_handler(tauri::generate_handler![save_tool])
         .invoke_handler(tauri::generate_handler![])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
-
