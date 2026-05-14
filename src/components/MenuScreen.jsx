@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { resolveResource } from "@tauri-apps/api/path";
+// import { resolveResource } from "@tauri-apps/api/path";
 import { convertFileSrc } from "@tauri-apps/api/core";
 
 // ── Position offsets from center (px) ───────────────────────────────────────
@@ -149,14 +149,25 @@ export default function MenuScreen({ user, config, onNavigate, onLogout }) {
   const centerLabel = config?.menu?.centerLabel ?? "CORE";
 
   // ── Load logo from beside the .exe ────────────────────────────────────────
+  // useEffect(() => {
+  //   const logoPath = config?.app?.logoPath;
+  //   if (!logoPath) return;
+  //
+  //   resolveResource(logoPath)
+  //     .then((p) => setLogoSrc(convertFileSrc(p)))
+  //     .catch(() => setLogoSrc(null));
+  // }, [config?.app?.logoPath]);
+
   useEffect(() => {
     const logoPath = config?.app?.logoPath;
-    if (!logoPath) return;
-
-    resolveResource(logoPath)
-      .then((p) => setLogoSrc(convertFileSrc(p)))
-      .catch(() => setLogoSrc(null));
+    if (!logoPath) {
+      setLogoSrc(null);
+      return;
+    }
+    // Convert the absolute file path to a Tauri asset URL
+    setLogoSrc(convertFileSrc(logoPath));
   }, [config?.app?.logoPath]);
+
 
   function handleClick(item) {
     setActive(item.id);

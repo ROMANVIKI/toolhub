@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { USERS } from "../data";
 // ✅ Replace with this
-import { resolveResource } from "@tauri-apps/api/path";
+// import { resolveResource } from "@tauri-apps/api/path";
 import { convertFileSrc } from "@tauri-apps/api/core";
 
 
@@ -19,13 +19,24 @@ export default function LoginScreen({ onLogin, config }) {
   const auth = config?.auth ?? {};
 
   // ── Load logo from beside the .exe ──────────────────────────────────────
+  // useEffect(() => {
+  //   const logoPath = config?.app?.logoPath;
+  //   if (!logoPath) return;
+  //
+  //   resolveResource(logoPath)
+  //     .then((p) => setLogoSrc(convertFileSrc(p)))
+  //     .catch(() => setLogoSrc(null));
+  // }, [config?.app?.logoPath]);
+
+
   useEffect(() => {
     const logoPath = config?.app?.logoPath;
-    if (!logoPath) return;
-
-    resolveResource(logoPath)
-      .then((p) => setLogoSrc(convertFileSrc(p)))
-      .catch(() => setLogoSrc(null));
+    if (!logoPath) {
+      setLogoSrc(null);
+      return;
+    }
+    // Convert the absolute file path to a Tauri asset URL
+    setLogoSrc(convertFileSrc(logoPath));
   }, [config?.app?.logoPath]);
 
   // ── Credential login ─────────────────────────────────────────────────────
